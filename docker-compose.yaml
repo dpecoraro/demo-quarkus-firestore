@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  quarkus-firestore:
+    container_name: quarkus-firestore
+    image: quarkus-firestore
+    build:
+      context: .
+      dockerfile: ./src/main/docker/Dockerfile.jvm
+    env_file: .env
+    ports:
+      - 8080:8080
