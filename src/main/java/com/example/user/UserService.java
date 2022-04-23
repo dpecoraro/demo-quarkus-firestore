@@ -7,6 +7,8 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
+import de.mobiuscode.nameof.Name;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -33,6 +35,21 @@ public class UserService {
         return true;
     }
 
+    public boolean AddPatchUsers(List<UserDTO> users) {
+        try {
+            Firestore store = gcpClient.GetDataBase();
+            var docRef = store.collection("users");
+
+            users.forEach(user -> {
+                docRef.document().set(user);
+            });
+
+            return true;
+        } catch(Exception ex) {
+            return false;
+        }
+    }
+
     public List<UserDTO> GetAll(){
         try {
             Firestore db = gcpClient.GetDataBase();
@@ -50,5 +67,23 @@ public class UserService {
         } catch(Exception ex) {
             return null;
         }
+    }
+
+    public UserDTO getByEmail(String email) {
+        try {
+            Firestore db = gcpClient.GetDataBase();
+
+            var query = db.collection("users")
+                    .whereEqualTo(Name.of(UserDTO.class, UserDTO::getEmail), email);
+
+            var snapShot = query.get();
+
+            for (var doc: snapShot.get().getDocuments()) {
+            System.out.println(doc.getId());
+            }
+        } catch(Exception ex){
+            return null;
+        }
+        return null;
     }
 }
