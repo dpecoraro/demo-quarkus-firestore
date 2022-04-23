@@ -7,6 +7,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +16,14 @@ import java.util.UUID;
 @Singleton
 public class UserService {
 
+    @Inject
+    private GcpClient gcpClient;
+
     private List<UserDTO> users = new ArrayList<UserDTO>();
     
     public boolean Add(UserDTO user) {
         try {
-            GcpClient client = new GcpClient();
-            Firestore database = client.GetDataBase();
+            Firestore database = gcpClient.GetDataBase();
             var docRef = database.collection("users")
                     .document(UUID.randomUUID().toString());
             docRef.set(user);
@@ -32,8 +35,7 @@ public class UserService {
 
     public List<UserDTO> GetAll(){
         try {
-            GcpClient client = new GcpClient();
-            Firestore db = client.GetDataBase();
+            Firestore db = gcpClient.GetDataBase();
 
             ApiFuture<QuerySnapshot> query = db.collection("users").get();
             QuerySnapshot snapShot = query.get();

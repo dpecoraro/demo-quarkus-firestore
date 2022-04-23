@@ -1,9 +1,11 @@
 package com.example.user.dto;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class UserDTO {
-
+    public UserDTO() { }
     public UserDTO(String name, String password) {
         this.name = name;
         this.password = password;
@@ -13,6 +15,8 @@ public class UserDTO {
     private String password;
     private Date birthday;
     private String email;
+
+
 
     public String getName() {
         return name;
@@ -38,8 +42,9 @@ public class UserDTO {
         this.password = password;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setBirthday(String birthday) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        this.birthday = sdf.parse(birthday);
     }
 
     public void setEmail(String email) {
